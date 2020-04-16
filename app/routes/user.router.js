@@ -10,6 +10,8 @@ const userController = require('../controllers/user.controller');
 
 //test router
 router.get('/test', userController.test);
+// add user
+router.post('/adduser', userController.registerUser);
 
 
 
