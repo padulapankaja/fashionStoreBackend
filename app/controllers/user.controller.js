@@ -1,8 +1,17 @@
 //import User model
 const User = require('../models/user.model');
 // import util functions
-
 const UtilObj = require('../util/util')
+// import hash mwthod
+const bcrypt = require('crypto-js')
+
+// import jason web token
+const jwt = require('jsonwebtoken')
+// import nodemon
+const attributes = require('../../nodemon.json')
+
+// import middle ware
+const checkAuth = require('../middleware/checkauth.middleware.js')
 
 // test functions
 exports.test = function (req, res) {
@@ -10,8 +19,10 @@ exports.test = function (req, res) {
 };
 
 
-// add user 
 
+//======================================================================================================
+//===================================  ADD USER         ==============================================
+//====================================================================================================== 
 exports.registerUser = function (req, res, next) {
     // create user  type object
     // console.log(req);
@@ -54,5 +65,68 @@ exports.registerUser = function (req, res, next) {
     } else {
         res.status(600).send('Not Added');
     }
+
+}
+
+
+//======================================================================================================
+//===================================  Login             ==============================================
+//====================================================================================================== 
+
+exports.signIn = function (req, res, next) {
+    User.find({ email: req.body.uEmail }).exec().then(user => {
+        if (user.length < 1) {
+            return res.status(401).json({
+                message: 'Auth Faild , No user data availble in this email'
+            });
+        }
+        var user__salt = user[0].salt
+        var _signuser_password = req.body.uPass
+        var _signuser_hashed_password = bcrypt.SHA256(user__salt + _signuser_password).toString();
+        var _user_hashed_password = (user[0].password).toString();
+
+        var isAvalabel = _signuser_hashed_password.localeCompare(_user_hashed_password, { sensitivity: 'base' })
+
+        console.log("Available User Password : ", _user_hashed_password);
+        console.log("Comming User Password   : ", _signuser_hashed_password);
+        console.log("is availabel ", isAvalabel);
+        console.log("user slat ", user__salt);
+        console.log("userpassord  slat ", _signuser_password);
+
+
+        if (isAvalabel == 0) {
+            const token = jwt.sign({
+                email: user[0].email,
+                userId: user[0]._id
+            },
+            attributes.env.JWT_KEY,
+                {
+                    expiresIn: "1h"
+                }
+            );
+            return res.status(200).json({
+                message: 'Auth Sucess',
+                token: token
+            })
+
+        } else if (isAvalabel == 1) {
+            return res.status(401).json({
+                message: 'Auth faild, passwod did not match'
+            })
+        } else {
+            return res.status(401).json({
+                message: 'Auth faild, passwod did not match'
+            })
+        }
+
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
+
+
 
 }
