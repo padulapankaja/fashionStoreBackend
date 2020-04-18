@@ -22,6 +22,7 @@ router.get('/test', userController.test);
 router.post('/adduser', userController.registerUser);
 //login user
 router.post('/signin', userController.signIn )
+router.post('/getsalt', userController.getSalt )
 
 
 //export router

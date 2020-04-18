@@ -80,18 +80,22 @@ exports.signIn = function (req, res, next) {
                 message: 'Auth Faild , No user data availble in this email'
             });
         }
-        var user__salt = user[0].salt
-        var _signuser_password = req.body.uPass
-        var _signuser_hashed_password = bcrypt.SHA256(user__salt + _signuser_password).toString();
-        var _user_hashed_password = (user[0].password).toString();
+        console.log("REQUEST -------------------------------------------");
+        console.log("REQUEST -------------------------------------------");
+        console.log("REQUEST -------------------------------------------");
+        console.log("REQUEST -------------------------------------------");
+        console.log("REQUEST -------------------------------------------");
 
+        var _signuser_hashed_password =  req.body.uPass
+
+        var _user_hashed_password = user[0].password
         var isAvalabel = _signuser_hashed_password.localeCompare(_user_hashed_password, { sensitivity: 'base' })
 
         console.log("Available User Password : ", _user_hashed_password);
         console.log("Comming User Password   : ", _signuser_hashed_password);
         console.log("is availabel ", isAvalabel);
-        console.log("user slat ", user__salt);
-        console.log("userpassord  slat ", _signuser_password);
+
+
 
 
         if (isAvalabel == 0) {
@@ -99,26 +103,76 @@ exports.signIn = function (req, res, next) {
                 email: user[0].email,
                 userId: user[0]._id
             },
-            attributes.env.JWT_KEY,
+                attributes.env.JWT_KEY,
                 {
                     expiresIn: "1h"
                 }
             );
             return res.status(200).json({
                 message: 'Auth Sucess',
-                token: token
+
+                userData: {
+                    "id": user[0]._id,
+                    "fname": user[0].fname,
+                    "lname": user[0].lname,
+                    "email": user[0].email,
+                    "createdat": user[0].created_at,
+                    "token": token,
+                }
+
             })
 
-        } else if (isAvalabel == 1) {
-            return res.status(401).json({
+        } 
+        else if (isAvalabel == 1) {
+            return res.status(403).json({
                 message: 'Auth faild, passwod did not match'
             })
-        } else {
+        }
+        else if (isAvalabel == -1) {
+            return res.status(403).json({
+                message: 'Auth faild, passwod did not match'
+            })
+        }
+        
+        else {
             return res.status(401).json({
                 message: 'Auth faild, passwod did not match'
             })
         }
 
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
+
+
+
+}
+
+
+
+//======================================================================================================
+//===================================  Get Salt             ==============================================
+//====================================================================================================== 
+
+exports.getSalt = function (req, res, next) {
+    User.find({ email: req.body.uEmail }).exec().then(user => {
+        if (user.length < 1) {
+            return res.status(401).json({
+                message: 'Auth Faild , No user data availble in this email'
+            });
+        }
+        var user__salt = user[0].salt
+        if (user.length == 1) {
+            return res.status(200).json({
+                message: 'Auth success',
+                _user_salt: user__salt
+            })
+        }
+        
     }).catch(err => {
         console.log(err);
         res.status(500).json({
