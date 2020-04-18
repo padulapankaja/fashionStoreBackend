@@ -10,8 +10,6 @@ const userController = require('../controllers/user.controller');
 
 //test router
 router.get('/test', userController.test);
-// add user
-router.post('/adduser', userController.registerUser);
 
 
 
@@ -20,8 +18,10 @@ router.post('/adduser', userController.registerUser);
 //====================================================================================================== 
 
 
-
-
+// add user
+router.post('/adduser', userController.registerUser);
+//login user
+router.post('/signin', userController.signIn )
 
 
 //export router
