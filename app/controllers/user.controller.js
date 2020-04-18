@@ -1,5 +1,8 @@
 //import User model
 const User = require('../models/user.model');
+// import util functions
+
+const UtilObj = require('../util/util')
 
 // test functions
 exports.test = function (req, res) {
@@ -39,7 +42,7 @@ exports.registerUser = function (req, res, next) {
                     if (err) {
                         return next(err);
                     }
-
+                    UtilObj.sentEmailforRegisterUsers(new_user.email)
                     res.status(201).send('Added Successfully');
                 })
             } else {
