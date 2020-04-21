@@ -1,5 +1,7 @@
 //import User model
 const User = require('../models/user.model');
+//import Sign model
+const SignInToken = require('../models/signtokens.model');
 // import util functions
 const UtilObj = require('../util/util')
 // import hash mwthod
@@ -86,7 +88,7 @@ exports.signIn = function (req, res, next) {
         console.log("REQUEST -------------------------------------------");
         console.log("REQUEST -------------------------------------------");
 
-        var _signuser_hashed_password =  req.body.uPass
+        var _signuser_hashed_password = req.body.uPass
 
         var _user_hashed_password = user[0].password
         var isAvalabel = _signuser_hashed_password.localeCompare(_user_hashed_password, { sensitivity: 'base' })
@@ -108,6 +110,17 @@ exports.signIn = function (req, res, next) {
                     expiresIn: "1h"
                 }
             );
+            var today = new Date();
+            // store sign in token in userr data 
+            var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, expireAt : today});
+            newSign_in_user.save(function (err) {
+                if (err) {
+                    return next(err);
+                }
+
+            })
+
+
             return res.status(200).json({
                 message: 'Auth Sucess',
 
@@ -122,7 +135,7 @@ exports.signIn = function (req, res, next) {
 
             })
 
-        } 
+        }
         else if (isAvalabel == 1) {
             return res.status(403).json({
                 message: 'Auth faild, passwod did not match'
@@ -133,7 +146,7 @@ exports.signIn = function (req, res, next) {
                 message: 'Auth faild, passwod did not match'
             })
         }
-        
+
         else {
             return res.status(401).json({
                 message: 'Auth faild, passwod did not match'
@@ -172,7 +185,7 @@ exports.getSalt = function (req, res, next) {
                 _user_salt: user__salt
             })
         }
-        
+
     }).catch(err => {
         console.log(err);
         res.status(500).json({
