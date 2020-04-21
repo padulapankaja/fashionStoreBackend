@@ -11,11 +11,11 @@ let SignInToken = new Schema({
     token:{
         type:String
     },
-    expireAt:{
-        type : String
-    }
+    createdAt:{
+        type : Date,
+        default : Date.now()
+    },
 });
-
 
 module.exports = mongoose.model('tokens', SignInToken);
 // in this 'exsample' - exsample should be collection name

@@ -89,7 +89,7 @@ exports.signIn = function (req, res, next) {
         console.log("REQUEST -------------------------------------------");
 
         var _signuser_hashed_password = req.body.uPass
-
+        var keepMeSignIn = true;
         var _user_hashed_password = user[0].password
         var isAvalabel = _signuser_hashed_password.localeCompare(_user_hashed_password, { sensitivity: 'base' })
 
@@ -112,7 +112,10 @@ exports.signIn = function (req, res, next) {
             );
             var today = new Date();
             // store sign in token in userr data 
-            var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, expireAt : today});
+
+            var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createAt: today});
+
+          
             newSign_in_user.save(function (err) {
                 if (err) {
                     return next(err);
@@ -196,4 +199,32 @@ exports.getSalt = function (req, res, next) {
 
 
 
+}
+
+
+//======================================================================================================
+//=================================== Get Last record      ==============================================
+//====================================================================================================== 
+
+exports.getLatest = function (req, res, next) {
+    SignInToken.find({ email: req.body.uEmail }).sort({ _id: -1 }).exec().then(userSignin => {
+        console.log(userSignin);
+
+        if (userSignin.length < 1) {
+            res.status(201).json({
+                error: "User no login in now"
+            });
+
+        } else {
+            res.status(200).json({
+                userSignin: userSignin[0]
+            });
+        }
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
 }
