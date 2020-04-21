@@ -23,6 +23,7 @@ router.post('/adduser', userController.registerUser);
 //login user
 router.post('/signin', userController.signIn )
 router.post('/getsalt', userController.getSalt )
+router.post('/getlast', userController.getLatest )
 
 
 //export router

@@ -18,6 +18,9 @@ const attributes = require('../../nodemon.json')
 //====================================================================================================== 
 module.exports = (req, res, next) => {
     try {
+
+
+        
         const decorded = jwt.verify(req.body.token, attributes.env.JWT_KEY);
         req.userData = decorded
         next();
