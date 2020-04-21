@@ -10,6 +10,7 @@ const userController = require('../controllers/user.controller');
 
 //test router
 router.get('/test', userController.test);
+router.get('/all', userController.getAllUsers);
 
 
 
