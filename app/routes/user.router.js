@@ -23,8 +23,18 @@ router.get('/all', userController.getAllUsers);
 router.post('/adduser', userController.registerUser);
 //login user
 router.post('/signin', userController.signIn )
+// get salt
 router.post('/getsalt', userController.getSalt )
+// get last login
 router.post('/getlast', userController.getLatest )
+// delete
+router.post('/d/r/ur', userController.deleteUser )
+
+// reset password
+router.post('/u/re/pw', userController.resetPassword)
+
+
+
 
 
 //export router
