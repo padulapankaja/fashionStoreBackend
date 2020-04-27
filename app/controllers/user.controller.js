@@ -15,6 +15,7 @@ const attributes = require('../../nodemon.json')
 // import middle ware
 const checkAuth = require('../middleware/checkauth.middleware.js')
 
+
 // test functions
 exports.test = function (req, res) {
     res.json({ val: 'Greetings from the Test controller!', des: '1424', kk: '45455' });
@@ -362,3 +363,56 @@ exports.resetPassword = function (req, res) {
         })
     }
 }
+
+
+//======================================================================================================
+//===================================  Profile Pis     ==============================================
+//======================================================================================================
+
+
+exports.uploadImage = function (req, res, next) {
+    let updateProfilePic = {
+        "uId": req.body.uId,
+        "uEmail": req.body.uEmail,
+        "profilepic": req.file.path
+    }
+    console.log(updateProfilePic);
+    User.find({ email: updateProfilePic.uEmail }).exec().then(user => {
+        if (user.length < 1) {
+            return res.status(401).json({
+                message: 'No user find , No user data availble in this email'
+            });
+        } else if (user.length == 1) {
+            if (updateProfilePic.uId == null || updateProfilePic.uId == undefined || updateProfilePic.profilepic == null || updateProfilePic.profilepic == null == undefined) {
+                return res.status(402).json({
+                    message: 'No images'
+                })
+            }
+            User.update({ _id: updateProfilePic.uId }, {
+                $set: {
+                    "profilepic": updateProfilePic.profilepic,
+
+                }
+            }, function (err) {
+                if (err) return next(err);
+                res.status(200).json({
+                    message: 'Image Added sucessfully'
+                })
+            })
+        }
+        else {
+            return res.status(401).json({
+                message: 'No user find'
+            })
+        }
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
+
+
+}
+

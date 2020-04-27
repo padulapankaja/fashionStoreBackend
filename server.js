@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require("mongoose");
 const morgan = require('morgan')
-
+const multer = require('multer')
+const upload = multer({ dest: 'uploads/profilepic/' })
 //define server running port
 let port = 4000;
 
@@ -30,6 +31,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('dev'))
+app.use('/uploads', express.static('uploads'))
 mongoose.set('useCreateIndex', true);
 //======================================================================================================
 //=================================== defines routes     ===============================================
@@ -55,6 +57,8 @@ app.use((error, req, res, next) => {
     });
 
 });
+
+
 
 
 //======================================================================================================
