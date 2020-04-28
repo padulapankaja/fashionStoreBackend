@@ -58,12 +58,16 @@ router.post('/signin', userController.signIn)
 router.post('/getsalt', userController.getSalt)
 // get last login
 router.post('/getlast', userController.getLatest)
+// get spesifc user
+router.post('/u/my/user', userController.getSpecifUser)
+// change fname and  lanem
+router.post('/u/my/uname', userController.changeUsername)
 
 // critical functio ----------------------------------
 // delete
 router.post('/d/r/ur', userController.deleteUser)
 // reset password
-router.post('/u/re/pw', userController.resetPassword)
+router.post('/reset/user/pw', userController.resetPassword)
 // upload profile pci
 router.post('/u/pp/up', upload.single('photos'), userController.uploadImage)
 

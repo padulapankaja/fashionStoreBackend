@@ -135,6 +135,7 @@ exports.signIn = function (req, res, next) {
                     "email": user[0].email,
                     "createdat": user[0].created_at,
                     "token": token,
+                    "profilepic": user[0].profilepic
                 }
 
             })
@@ -371,12 +372,15 @@ exports.resetPassword = function (req, res) {
 
 
 exports.uploadImage = function (req, res, next) {
+
+    console.log(req.body);
+
     let updateProfilePic = {
         "uId": req.body.uId,
         "uEmail": req.body.uEmail,
         "profilepic": req.file.path
     }
-    console.log(updateProfilePic);
+    // console.log(updateProfilePic);
     User.find({ email: updateProfilePic.uEmail }).exec().then(user => {
         if (user.length < 1) {
             return res.status(401).json({
@@ -416,3 +420,91 @@ exports.uploadImage = function (req, res, next) {
 
 }
 
+
+
+//======================================================================================================
+//===================================  get spesic user details==========================================
+//======================================================================================================
+
+exports.getSpecifUser = function (req, res, next) {
+    User.find({ email: req.body.uEmail }).exec().then(user => {
+        if (user.length < 1) {
+            return res.status(401).json({
+                message: 'Auth Faild , No user data availble in this email'
+            });
+        }
+        if (user.length == 1) {
+            return res.status(200).json(
+                user[0]
+            )
+        }
+
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
+}
+
+
+//======================================================================================================
+//===================================  change user name       =========================================
+//======================================================================================================
+
+exports.changeUsername= function(req, res ){
+
+    console.log(req.body);
+    
+
+    let chnageusername = {
+        "uEmail": req.body.uEmail,
+        "fname": req.body.fname,
+        "lname": req.body.lname,
+       
+    };
+
+    if (chnageusername.uEmail == null || chnageusername.uEmail == undefined ) {
+        return res.status(401).json({
+            message: 'No data'
+        })
+    } else {
+
+        User.find({ email: chnageusername.uEmail }).exec().then(user => {
+            if (user.length < 1) {
+                return res.status(402).json({
+                    message: 'Auth Faild , No user data availble in this email'
+                });
+            } else if (user.length == 1) {
+                if (chnageusername.fname == null || chnageusername.fname == undefined || chnageusername.lname == null || chnageusername.lname == undefined) {
+                    return res.status(402).json({
+                        message: 'Please provide First name & Last name'
+                    })
+                }
+                User.update({email:chnageusername.uEmail}, {
+                    $set: {
+                        "fname": chnageusername.fname,
+                        "lname": chnageusername.lname
+                    }
+                }, function (err) {
+                    if (err) return next(err);
+                    res.status(200).json({
+                        message: 'Reset Successfully'
+                    })
+                })
+            }
+            else {
+                return res.status(401).json({
+                    message: 'Your Password is did not match'
+                })
+            }
+        }).catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+
+        })
+    }
+}
