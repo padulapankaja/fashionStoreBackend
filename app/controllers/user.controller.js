@@ -15,6 +15,7 @@ const attributes = require('../../nodemon.json')
 // import middle ware
 const checkAuth = require('../middleware/checkauth.middleware.js')
 
+
 // test functions
 exports.test = function (req, res) {
     res.json({ val: 'Greetings from the Test controller!', des: '1424', kk: '45455' });
@@ -113,9 +114,9 @@ exports.signIn = function (req, res, next) {
             var today = new Date();
             // store sign in token in userr data 
 
-            var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createAt: today});
+            var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createAt: today });
 
-          
+
             newSign_in_user.save(function (err) {
                 if (err) {
                     return next(err);
@@ -233,12 +234,185 @@ exports.getLatest = function (req, res, next) {
 //====================================================================================================== 
 
 exports.getAllUsers = function (req, res, next) {
-    User.find({}, function(err, result){
-        if(err){
+    User.find({}, function (err, result) {
+        if (err) {
             console.log(err);
-            
-        }else{
+
+        } else {
             res.status(200).json(result);
         }
     })
 }
+
+
+//======================================================================================================
+//===================================   Delete Account      ==============================================
+//====================================================================================================== 
+exports.deleteUser = function (req, res) {
+    console.log(req.body);
+    let deleteUser = {
+        "uEmail": req.body.email,
+        "uPass": req.body.password,
+    };
+    console.log(deleteUser);
+    User.find({ email: deleteUser.uEmail }).exec().then(user => {
+        if (user.length < 1) {
+            return res.status(401).json({
+                message: 'Auth Faild , No user data availble in this email'
+            });
+        }
+        var _signuser_hashed_password = deleteUser.uPass
+        var _user_hashed_password = user[0].password
+        var isAvalabel = _signuser_hashed_password.localeCompare(_user_hashed_password, { sensitivity: 'base' })
+        if (isAvalabel == 0) {
+            // var idValid = req.params.id.localeCompare(user[0]._id)
+            idValid = 0;
+            if (idValid == 0) {
+                UtilObj.sentEmailforDeletedUsers(user[0].email)
+                User.findByIdAndRemove(user[0]._id, function (err) {
+                    if (err) return next(err);
+                    res.status(200).json({
+                        message: 'Sucessfully Deleted'
+                    })
+                })
+            } else {
+                return res.status(405).json({
+                    message: 'Your user id not valid'
+                })
+            }
+        }
+        else if (isAvalabel == 1) {
+            return res.status(403).json({
+                message: 'Your Password is did not match  '
+            })
+        }
+        else if (isAvalabel == -1) {
+            return res.status(403).json({
+                message: 'Your Password is did not match'
+            })
+        }
+        else {
+            return res.status(401).json({
+                message: 'Your Password is did not match'
+            })
+        }
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
+
+}
+
+
+//======================================================================================================
+//===================================  Reset Password      ==============================================
+//======================================================================================================
+
+exports.resetPassword = function (req, res) {
+    let resetPassword = {
+        "uEmail": req.body.userEmail,
+        "uPass": req.body.newHashedPass,
+        "salt": req.body.newSalt,
+        "_id": req.body.userId
+    };
+    console.log(resetPassword);
+
+    if (resetPassword._id == null || resetPassword._id == undefined || resetPassword.uEmail == null || resetPassword.uEmail == undefined) {
+        return res.status(401).json({
+            message: 'No data'
+        })
+    } else {
+
+        User.find({ email: resetPassword.uEmail }).exec().then(user => {
+            if (user.length < 1) {
+                return res.status(401).json({
+                    message: 'Auth Faild , No user data availble in this email'
+                });
+            } else if (user.length == 1) {
+                if (resetPassword.uPass == null || resetPassword.uPass == undefined || resetPassword.salt == null || resetPassword.salt == undefined) {
+                    return res.status(402).json({
+                        message: 'Your Password is did not match'
+                    })
+                }
+                User.update({ _id: resetPassword._id }, {
+                    $set: {
+                        "password": resetPassword.uPass,
+                        "salt": resetPassword.salt
+                    }
+                }, function (err) {
+                    if (err) return next(err);
+                    res.status(200).json({
+                        message: 'Reset Successfully'
+                    })
+                })
+            }
+            else {
+                return res.status(401).json({
+                    message: 'Your Password is did not match'
+                })
+            }
+        }).catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+
+        })
+    }
+}
+
+
+//======================================================================================================
+//===================================  Profile Pis     ==============================================
+//======================================================================================================
+
+
+exports.uploadImage = function (req, res, next) {
+    let updateProfilePic = {
+        "uId": req.body.uId,
+        "uEmail": req.body.uEmail,
+        "profilepic": req.file.path
+    }
+    console.log(updateProfilePic);
+    User.find({ email: updateProfilePic.uEmail }).exec().then(user => {
+        if (user.length < 1) {
+            return res.status(401).json({
+                message: 'No user find , No user data availble in this email'
+            });
+        } else if (user.length == 1) {
+            if (updateProfilePic.uId == null || updateProfilePic.uId == undefined || updateProfilePic.profilepic == null || updateProfilePic.profilepic == null == undefined) {
+                return res.status(402).json({
+                    message: 'No images'
+                })
+            }
+            User.update({ _id: updateProfilePic.uId }, {
+                $set: {
+                    "profilepic": updateProfilePic.profilepic,
+
+                }
+            }, function (err) {
+                if (err) return next(err);
+                res.status(200).json({
+                    message: 'Image Added sucessfully'
+                })
+            })
+        }
+        else {
+            return res.status(401).json({
+                message: 'No user find'
+            })
+        }
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
+
+
+}
+
