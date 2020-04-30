@@ -16,6 +16,8 @@ const attributes = require('../../nodemon.json')
 const checkAuth = require('../middleware/checkauth.middleware.js')
 
 
+
+
 // test functions
 exports.test = function (req, res) {
     res.json({ val: 'Greetings from the Test controller!', des: '1424', kk: '45455' });
@@ -47,7 +49,7 @@ exports.registerUser = function (req, res, next) {
         && (new_user.salt != null || new_user.salt != undefined)) {
         console.log(new_user);
 
-
+            
         // check userdata
         User.find({ email: new_user.email }, function (err, docs) {
             if (docs.length == 0) {
@@ -56,6 +58,8 @@ exports.registerUser = function (req, res, next) {
                     if (err) {
                         return next(err);
                     }
+                    console.log("New user register");
+                    
                     UtilObj.sentEmailforRegisterUsers(new_user.email)
                     res.status(201).send('Added Successfully');
                 })

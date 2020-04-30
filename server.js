@@ -9,6 +9,7 @@ const upload = multer({ dest: 'uploads/profilepic/' })
 //define server running port
 let port = 4000;
 
+const MongoClient = require('mongodb').MongoClient;
 
 //======================================================================================================
 //===================================import routes    =================================================
@@ -69,11 +70,16 @@ app.use((error, req, res, next) => {
 mongoose.connect(dbConfig.url, {
     useNewUrlParser: true, useUnifiedTopology: true
 }).then(() => {
-    console.log("Successfully connected to the database");
+    console.log("Successfully connected to the database now");
 }).catch(err => {
     console.log('Could not connect to the database. Exiting now...', err);
     process.exit();
 });
+
+
+
+
+
 
 
 // open server
