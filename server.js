@@ -22,6 +22,8 @@ const categoryRoutes = require('./app/routes/category.router');
 
 const adminRoutes = require('./app/routes/admin.route');
 
+const managerRoutes = require('./app/routes/manager.route');
+
 
 //======================================================================================================
 //===================================import config files ===============================================
@@ -46,10 +48,11 @@ mongoose.set('useCreateIndex', true);
 //user routes 
 app.use('/user', userRoutes);
 
-app.use('/category', categoryRoutes );
+app.use('/category', categoryRoutes);
 
+app.use('/admin', adminRoutes);
 
- app.use('/admin', adminRoutes);
+app.use('/manager', managerRoutes);
 
 //======================================================================================================
 //================================== Handlle Error     ===========================================

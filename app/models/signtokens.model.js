@@ -4,22 +4,23 @@ const moment = require('moment')
 
 
 let SignInToken = new Schema({
-  
-    
-    email:{
-        type:String
+    email: {
+        type: String
     },
-    token:{
-        type:String
+    token: {
+        type: String
     },
-    keepme:{
-        type:Boolean
+    keepme: {
+        type: Boolean
     },
-    expireresin:{
-        type:String
+    expireresin: {
+        type: String
     },
-    createdAt:{
-        type : Date,
+    createdAt: {
+        type: Date,
+    },
+    browser: {
+        type: String
     }
 });
 

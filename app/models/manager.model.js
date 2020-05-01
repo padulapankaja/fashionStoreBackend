@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-let Admin = new Schema({
+let Manager = new Schema({
     fname: {
         type: String
     },
@@ -26,21 +26,18 @@ let Admin = new Schema({
     cn: {
         type: String
     },
-    managers:
-        [{
-            id: { type: String },
-            name: { type: String },
-            email: { type: String },
-            date: { type: Date, default: Date.now() },
-        }],
+    adminId: {
+        type: String
+
+    },
     created_at: {
-        type: Date, default: Date.now()
+         type: Date, default: Date.now()
     },
     type: {
         type: String,
-        default: "admin"
+        default: "manager"
     }
 
 });
-module.exports = mongoose.model('admin', Admin);
+module.exports = mongoose.model('manager', Manager);
 // in this 'exsample' - exsample should be collection name
