@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer')
-
+const checkAuth = require('../middleware/checkauth.middleware')
 
 const storage = multer.diskStorage({
     destination: function (req, res, cb) {
@@ -53,26 +53,26 @@ router.get('/all', userController.getAllUsers);
 // add user
 router.post('/adduser', userController.registerUser);
 //login user
-router.post('/signin', userController.signIn)
+router.post('/signin',  userController.signIn)
 // get salt
-router.post('/getsalt', userController.getSalt)
+router.post('/getsalt', checkAuth, userController.getSalt)
 // get last login
-router.post('/getlast', userController.getLatest)
+router.post('/getlast', checkAuth, userController.getLatest)
 // get spesifc user
-router.post('/u/my/user', userController.getSpecifUser)
+router.post('/u/my/user', checkAuth, userController.getSpecifUser)
 // change fname and  lanem
-router.post('/u/my/uname', userController.changeUsername)
+router.post('/u/my/uname', checkAuth, userController.changeUsername)
 
 // critical functio ----------------------------------
 // delete
-router.post('/d/r/ur', userController.deleteUser)
+router.post('/d/r/ur', checkAuth,userController.deleteUser)
 // reset password
-router.post('/reset/user/pw', userController.resetPassword)
+router.post('/reset/user/pw', checkAuth,userController.resetPassword)
 // upload profile pci
 router.post('/u/pp/up', upload.single('photos'), userController.uploadImage)
 
-
-
+// get lst login 
+router.post('/get/l/login', checkAuth, userController.getLastLogin)
 
 
 //export router
