@@ -15,13 +15,12 @@ const attributes = require('../../nodemon.json')
 // import middle ware
 const checkAuth = require('../middleware/checkauth.middleware.js')
 
+const moment = require('moment')
 
 // test functions
 exports.test = function (req, res) {
     res.json({ val: 'Greetings from the Test controller!', des: '1424', kk: '45455' });
 };
-
-
 
 //======================================================================================================
 //===================================  ADD USER         ==============================================
@@ -56,6 +55,8 @@ exports.registerUser = function (req, res, next) {
                     if (err) {
                         return next(err);
                     }
+                    console.log("New user register");
+
                     UtilObj.sentEmailforRegisterUsers(new_user.email)
                     res.status(201).send('Added Successfully');
                 })
@@ -83,14 +84,14 @@ exports.signIn = function (req, res, next) {
                 message: 'Auth Faild , No user data availble in this email'
             });
         }
-        console.log("REQUEST -------------------------------------------");
-        console.log("REQUEST -------------------------------------------");
-        console.log("REQUEST -------------------------------------------");
-        console.log("REQUEST -------------------------------------------");
+
         console.log("REQUEST -------------------------------------------");
 
         var _signuser_hashed_password = req.body.uPass
-        var keepMeSignIn = true;
+        var keepme = req.body.keepme
+        console.log(keepme);
+
+
         var _user_hashed_password = user[0].password
         var isAvalabel = _signuser_hashed_password.localeCompare(_user_hashed_password, { sensitivity: 'base' })
 
@@ -102,43 +103,83 @@ exports.signIn = function (req, res, next) {
 
 
         if (isAvalabel == 0) {
-            const token = jwt.sign({
-                email: user[0].email,
-                userId: user[0]._id
-            },
-                attributes.env.JWT_KEY,
-                {
-                    expiresIn: "1h"
-                }
-            );
-            var today = new Date();
-            // store sign in token in userr data 
 
-            var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createAt: today });
+            if (keepme == true) {
+                // -----------------------------------
 
+                const token = jwt.sign({
+                    email: user[0].email,
+                    userId: user[0]._id
+                },
+                    attributes.env.JWT_KEY,
+                    {
+                        expiresIn: "240h"
+                    }
+                );
+                var today = new Date()
+                // store sign in token in userr data 
 
-            newSign_in_user.save(function (err) {
-                if (err) {
-                    return next(err);
-                }
+                var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createdAt: today, keepme: keepme });
+                newSign_in_user.save(function (err) {
+                    if (err) {
+                        return next(err);
+                    }
 
-            })
+                })
+                return res.status(200).json({
+                    message: 'Auth Sucess',
 
+                    userData: {
+                        "id": user[0]._id,
+                        "fname": user[0].fname,
+                        "lname": user[0].lname,
+                        "email": user[0].email,
+                        "createdat": user[0].created_at,
+                        "token": token,
+                        "profilepic": user[0].profilepic,
+                        "keepme": keepme
+                    }
 
-            return res.status(200).json({
-                message: 'Auth Sucess',
+                })
+                // -----------------------------------
+            } else {
+                // -----------------------------------
 
-                userData: {
-                    "id": user[0]._id,
-                    "fname": user[0].fname,
-                    "lname": user[0].lname,
-                    "email": user[0].email,
-                    "createdat": user[0].created_at,
-                    "token": token,
-                    "profilepic": user[0].profilepic
-                }
+                const token = jwt.sign({
+                    email: user[0].email,
+                    userId: user[0]._id
+                },
+                    attributes.env.JWT_KEY,
+                    {
+                        expiresIn: "1h"
+                    }
+                );
+                var today = new Date()
+                // store sign in token in userr data 
+                // today   = moment(today).format('LLLL') 
+                var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createdAt: today, keepme: keepme });
+                newSign_in_user.save(function (err) {
+                    if (err) {
+                        return next(err);
+                    }
 
-            })
+                })
+                return res.status(200).json({
+                    message: 'Auth Sucess',
+                    userData: {
+                        "id": user[0]._id,
+                        "fname": user[0].fname,
+                        "lname": user[0].lname,
+                        "email": user[0].email,
+                        "createdat": user[0].created_at,
+                        "token": token,
+                        "profilepic": user[0].profilepic,
+                        "keepme": keepme,
+                        // "lastloginDetails" : lastloginDetails
+                    }
+                })
+                // -----------------------------------
+            }
 
         }
         else if (isAvalabel == 1) {
@@ -169,8 +210,6 @@ exports.signIn = function (req, res, next) {
 
 
 }
-
-
 
 //======================================================================================================
 //===================================  Get Salt             ==============================================
@@ -420,8 +459,6 @@ exports.uploadImage = function (req, res, next) {
 
 }
 
-
-
 //======================================================================================================
 //===================================  get spesic user details==========================================
 //======================================================================================================
@@ -448,29 +485,22 @@ exports.getSpecifUser = function (req, res, next) {
     })
 }
 
-
 //======================================================================================================
 //===================================  change user name       =========================================
 //======================================================================================================
 
-exports.changeUsername= function(req, res ){
-
+exports.changeUsername = function (req, res) {
     console.log(req.body);
-    
-
     let chnageusername = {
         "uEmail": req.body.uEmail,
         "fname": req.body.fname,
         "lname": req.body.lname,
-       
     };
-
-    if (chnageusername.uEmail == null || chnageusername.uEmail == undefined ) {
+    if (chnageusername.uEmail == null || chnageusername.uEmail == undefined) {
         return res.status(401).json({
             message: 'No data'
         })
     } else {
-
         User.find({ email: chnageusername.uEmail }).exec().then(user => {
             if (user.length < 1) {
                 return res.status(402).json({
@@ -482,7 +512,7 @@ exports.changeUsername= function(req, res ){
                         message: 'Please provide First name & Last name'
                     })
                 }
-                User.update({email:chnageusername.uEmail}, {
+                User.update({ email: chnageusername.uEmail }, {
                     $set: {
                         "fname": chnageusername.fname,
                         "lname": chnageusername.lname
@@ -505,6 +535,31 @@ exports.changeUsername= function(req, res ){
                 error: err
             });
 
+        })
+    }
+}
+
+exports.getLastLogin = function (req, res, next) {
+    var email = req.body.uEmail
+    if (email != null || email != undefined) {
+        SignInToken.find({ email: email }, function (err, docs) {
+            try {
+                return res.status(200).json({
+                    lastlogin: moment(docs[0].createdAt).format('MMMM Do YYYY, h:mm:ss a'),
+                    token: docs[0].token,
+                    keepme: docs[0].keepme
+                })
+                next();
+
+            } catch (error) {
+                return res.status(401).json({
+                    message: 'No data found'
+                });
+            }
+        }).sort([["email", 1], ["createdAt", "desc"]])
+    } else {
+        return res.status(201).json({
+            lastlogin: 'Please provide email'
         })
     }
 }
