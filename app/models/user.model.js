@@ -3,37 +3,41 @@ const Schema = mongoose.Schema;
 
 
 let User = new Schema({
-  
-    
-    fname:{
-        type:String
+
+
+    fname: {
+        type: String
     },
-    lname:{
-        type:String
+    lname: {
+        type: String
     },
-    email:{
-        type:String
+    email: {
+        type: String
     },
-    password:{
-        type:String
+    password: {
+        type: String
     },
-    salt:{
-        type:String
+    salt: {
+        type: String
     },
-    profilepic:{
-        type:String
+    profilepic: {
+        type: String
     },
-    lastlogin:{
-        type:String
+    lastlogin: {
+        type: String
     },
-    gender:{
-        type:String
+    gender: {
+        type: String
     },
-    created_at:{
-        type:String
+    created_at: {
+        type: String
     },
-    updated_at:{
-        type:String
+    updated_at: {
+        type: String
+    },
+    type: {
+        type: String,
+        default: "user"
     }
 });
 

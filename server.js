@@ -17,6 +17,7 @@ const MongoClient = require('mongodb').MongoClient;
 
 //import user controlers
 const userRoutes = require('./app/routes/user.router');
+const adminRoutes = require('./app/routes/admin.route');
 
 //======================================================================================================
 //===================================import config files ===============================================
@@ -40,6 +41,8 @@ mongoose.set('useCreateIndex', true);
 
 //user routes 
 app.use('/user', userRoutes);
+//admin routes 
+app.use('/admin', adminRoutes);
 //======================================================================================================
 //================================== Handlle Error     ===========================================
 //======================================================================================================
