@@ -41,32 +41,34 @@ exports.test = function (req, res) {
 //================================== Register Super Admin  =============================================
 //====================================================================================================== 
 
-exports.registerSuperAdmin = function (req, res, next) { 
-   let new_admin = Admin({
+exports.registerManager = function (req, res, next) { 
+   let new_manager = Manager({
         fname: req.body.firstname,
         lname: req.body.lastname,
         email: req.body.useremail,
         password: req.body.password,
         salt: req.body.salt,
+        adminId : req.body.adminId
     });
     // check all values 
-    if ((new_admin.fname != null || new_admin.fname != undefined)
-        && (new_admin.lname != null || new_admin.lname != undefined)
-        && (new_admin.password != null || new_admin.password != undefined)
-        && (new_admin.email != null || new_admin.email != undefined)
-        && (new_admin.salt != null || new_admin.salt != undefined)) {
-        console.log(new_admin);
+    if ((new_manager.fname != null || new_manager.fname != undefined)
+        && (new_manager.lname != null || new_manager.lname != undefined)
+        && (new_manager.password != null || new_manager.password != undefined)
+        && (new_manager.email != null || new_manager.email != undefined)
+        && (new_manager.adminId != null || new_manager.adminId != undefined)
+        && (new_manager.salt != null || new_manager.salt != undefined)) {
+        console.log(new_manager);
         // check userdata
-        Admin.find({ email: new_admin.email }, function (err, docs) {
+        Manager.find({ email: new_manager.email }, function (err, docs) {
             if (docs.length == 0) {
                 //save 
-                new_admin.save(function (err) {
+                new_manager.save(function (err) {
                     if (err) {
                         return next(err);
                     }
                     console.log("New user register");
 
-                    UtilObj.sentEmailforRegisterUsers(new_admin.email)
+                    UtilObj.sentEmailforRegisterUsers(new_manager.email)
                     res.status(201).send('Added Successfully');
                 })
             } else {
