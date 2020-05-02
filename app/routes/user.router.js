@@ -55,7 +55,7 @@ router.post('/adduser', userController.registerUser);
 //login user
 router.post('/signin',  userController.signIn)
 // get salt
-router.post('/getsalt', checkAuth, userController.getSalt)
+router.post('/getsalt',  userController.getSalt)
 // get last login
 router.post('/getlast', checkAuth, userController.getLatest)
 // get spesifc user

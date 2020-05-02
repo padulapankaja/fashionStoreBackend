@@ -78,6 +78,9 @@ exports.registerUser = function (req, res, next) {
 //====================================================================================================== 
 
 exports.signIn = function (req, res, next) {
+
+    console.log(req.body);
+    
     User.find({ email: req.body.uEmail }).exec().then(user => {
         if (user.length < 1) {
             return res.status(401).json({
