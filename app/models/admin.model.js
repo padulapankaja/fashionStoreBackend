@@ -26,13 +26,6 @@ let Admin = new Schema({
     cn: {
         type: String
     },
-    managers:
-        [{
-            id: { type: String },
-            name: { type: String },
-            email: { type: String },
-            date: { type: Date, default: Date.now() },
-        }],
     created_at: {
         type: Date, default: Date.now()
     },
