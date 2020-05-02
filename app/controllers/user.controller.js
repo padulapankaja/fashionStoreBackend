@@ -140,7 +140,8 @@ exports.signIn = function (req, res, next) {
                         "createdat": user[0].created_at,
                         "token": token,
                         "profilepic": user[0].profilepic,
-                        "keepme": keepme
+                        "keepme": keepme,
+                        "type" : user[0].type
                     }
 
                 })
@@ -178,6 +179,8 @@ exports.signIn = function (req, res, next) {
                         "token": token,
                         "profilepic": user[0].profilepic,
                         "keepme": keepme,
+                        "type" : user[0].type
+
                         // "lastloginDetails" : lastloginDetails
                     }
                 })
