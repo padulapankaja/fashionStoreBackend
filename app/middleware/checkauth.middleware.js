@@ -46,7 +46,7 @@ module.exports =  (req, res, next) => {
             });
         }
     } catch (error) {
-        return res.status(401).json({
+        return res.status(409).json({
             message: 'Auth faild, in middle ware please sent token'
         });
     }
