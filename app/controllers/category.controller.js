@@ -13,6 +13,7 @@ exports.insert = (req, res ,next ) => {
 
     new_category.save( (err ,result ) => {
         if (err) { return next(err)}
+        console.log("hello");
         
         data = {
             status : 'success',
