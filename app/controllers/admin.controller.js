@@ -253,3 +253,61 @@ exports.getSalt = function (req, res, next) {
 
 
 }
+
+//======================================================================================================
+//===================================  Get All Managers  ==============================================
+//====================================================================================================== 
+
+exports.getAllManagers = function (req, res, next) {
+    Manager.find(null, { "_id" : true, "fname" : true, "lname" : true, "email" : true, "adminId" : true, "created_at" : true }).exec().then(user => {
+        if (user.length < 1) {
+            return res.status(402).json({
+                message: ' No manager data availble in this email'
+            });
+        }else{
+            return res.status(200).json({
+                managers: user
+            });
+        }
+        
+
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
+
+
+
+}
+
+//======================================================================================================
+//===================================  Get All Users     ==============================================
+//====================================================================================================== 
+
+exports.getAllUsers = function (req, res, next) {
+    User.find(null, { "_id" : true, "fname" : true, "lname" : true, "email" : true, "profilepic" : true, "created_at" : true }).exec().then(user => {
+        if (user.length < 1) {
+            return res.status(402).json({
+                message: ' No User data availble in this email'
+            });
+        }else{
+            return res.status(200).json({
+                users: user
+            });
+        }
+        
+
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
+
+
+
+}

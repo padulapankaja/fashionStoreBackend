@@ -94,6 +94,76 @@ class Util {
             }
         });
     }
+
+
+
+
+
+
+
+
+    // sent email for regiter users
+    sentEmailforRegisterManagers(uEmail, password, name) {
+        let transport = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            auth: {
+                user: 'cassertmusic@gmail.com',
+                pass: 'guruge123@sliit'
+            }
+        });
+        const handlebarOptions = {
+            viewEngine: {
+                extName: '.hbs',
+                partialsDir: './views/',
+                layoutsDir: './views/',
+                defaultLayout: 'manager.hbs',
+            },
+            viewPath: './views/',
+            extName: '.hbs',
+
+        };
+        transport.use('compile', hbs(handlebarOptions));
+        const message = {
+            from: 'cassertmusic@gmail.com',
+            to: uEmail,
+            subject: 'Welcome to Fashion Store',
+            template: 'manager',
+            context: {                  // <=
+                password: password,
+                name: name
+            }
+        };
+        transport.sendMail(message, function (err, info) {
+            if (err) {
+                console.log(err)
+
+            } else {
+                console.log(info);
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 var UtilObj = new Util();

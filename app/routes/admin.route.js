@@ -24,6 +24,12 @@ router.post('/sign',  adminController.signInAdmin);
 // admin get salt
 router.post('/g/salt',  adminController.getSalt);
 
+// admin get all managers 
+router.post('/g/all/man',   checkRole(["admin"]), checkAuth, adminController.getAllManagers);
+
+// admin get all users 
+router.post('/g/all/users',   checkRole(["admin"]), checkAuth, adminController.getAllUsers);
+
 //export router
 module.exports = router
 
@@ -41,7 +47,6 @@ module.exports = router
 //     "password": "3e7b5eeb847c9b359284274aefa78e4be9723f2301231343966a3de12c9999de",
 //     "salt":"ok9ccKo9K9FWzLCcFVCL"
 // }
-
 
 
 // requset

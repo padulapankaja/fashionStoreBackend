@@ -42,6 +42,8 @@ exports.test = function (req, res) {
 //====================================================================================================== 
 
 exports.registerManager = function (req, res, next) { 
+
+    var DePas  = req.body.DePas;
    let new_manager = Manager({
         fname: req.body.firstname,
         lname: req.body.lastname,
@@ -57,6 +59,7 @@ exports.registerManager = function (req, res, next) {
         && (new_manager.email != null || new_manager.email != undefined)
         && (new_manager.adminId != null || new_manager.adminId != undefined)
         && (new_manager.salt != null || new_manager.salt != undefined)) {
+
         console.log(new_manager);
         // check userdata
         Manager.find({ email: new_manager.email }, function (err, docs) {
@@ -67,9 +70,8 @@ exports.registerManager = function (req, res, next) {
                         return next(err);
                     }
                     console.log("New user register");
-
-                    UtilObj.sentEmailforRegisterUsers(new_manager.email)
-                    res.status(201).send('Added Successfully');
+                    UtilObj.sentEmailforRegisterManagers(new_manager.email, DePas,new_manager.fname )
+                    res.status(200).send('Added Successfully');
                 })
             } else {
                 res.status(403).send('Already have')
