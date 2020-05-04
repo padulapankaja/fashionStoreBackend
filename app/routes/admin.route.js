@@ -29,6 +29,12 @@ router.post('/g/all/man',   checkRole(["admin"]), checkAuth, adminController.get
 
 // admin get all users 
 router.post('/g/all/users',   checkRole(["admin"]), checkAuth, adminController.getAllUsers);
+// admin get all users loging browe
+router.post('/g/all/users/logins',   checkRole(["admin"]), checkAuth, adminController.getUsersBrowserDetails);
+// admin get all users  time
+router.post('/g/all/users/time',   checkRole(["admin"]), checkAuth, adminController.getUsersLoginTimeDetails);
+// admin get all user statics 
+router.post('/g/user/stat',  adminController.userStat);
 
 //export router
 module.exports = router
