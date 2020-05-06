@@ -393,6 +393,7 @@ exports.userStat = async function (req, res, next) {
     }
 
 
+
     
     console.log("User Browser Details -------------------------");
 
@@ -402,6 +403,42 @@ exports.userStat = async function (req, res, next) {
     console.log("User Browser Details -------------------------");
     return res.status(200).json({
         senDetails
+    });
+
+
+}
+
+
+exports.getUserRegistrationMonths = async function (req, res, next) {
+    var userCountsInYearly = [null];
+    var usercountinmo;
+    var currentYear = new Date().getFullYear()
+    for (i = 1; i <= 12; i++) {
+            if(i < 10 ){
+                var searchDate = currentYear+"-0"+i;
+                console.log(searchDate)
+                   usercountinmo = await SignInToken.countDocuments({ 'createdAt': {
+                           $gte: searchDate+'-01 00:00:00',
+                           $lt:  searchDate+'-31 23:59:59'
+                       } })
+            }else{
+                console.log(searchDate)
+                var searchDate = currentYear+"-"+i;
+                usercountinmo = await SignInToken.countDocuments({ 'createdAt': {
+                        $gte: searchDate+'-01 00:00:00',
+                        $lt:  searchDate+'-31 23:59:59'
+                    } })
+            }
+        userCountsInYearly[i-1] = {
+            year: currentYear,
+            month: i,
+            usersCount: usercountinmo
+        }
+
+    }
+    console.log(userCountsInYearly)
+    return res.status(200).json({
+            monthBasedUser : userCountsInYearly
     });
 
 

@@ -27,6 +27,7 @@ router.post('/g/salt',  adminController.getSalt);
 // admin get all managers 
 router.post('/g/all/man',   checkRole(["admin"]), checkAuth, adminController.getAllManagers);
 
+
 // admin get all users 
 router.post('/g/all/users',   checkRole(["admin"]), checkAuth, adminController.getAllUsers);
 // admin get all users loging browe
@@ -35,6 +36,10 @@ router.post('/g/all/users/logins',   checkRole(["admin"]), checkAuth, adminContr
 router.post('/g/all/users/time',   checkRole(["admin"]), checkAuth, adminController.getUsersLoginTimeDetails);
 // admin get all user statics 
 router.post('/g/user/stat',  adminController.userStat);
+
+//admin get user registtrion from month
+router.post('/g/user/months',  adminController.getUserRegistrationMonths);
+
 
 //export router
 module.exports = router
