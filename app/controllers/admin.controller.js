@@ -41,8 +41,8 @@ exports.test = function (req, res) {
 //================================== Register Super Admin  =============================================
 //====================================================================================================== 
 
-exports.registerSuperAdmin = function (req, res, next) { 
-   let new_admin = Admin({
+exports.registerSuperAdmin = function (req, res, next) {
+    let new_admin = Admin({
         fname: req.body.firstname,
         lname: req.body.lastname,
         email: req.body.useremail,
@@ -89,7 +89,7 @@ exports.registerSuperAdmin = function (req, res, next) {
 exports.signInAdmin = function (req, res, next) {
 
     console.log(req.body);
-    
+
     Admin.find({ email: req.body.uEmail }).exec().then(user => {
         if (user.length < 1) {
             return res.status(401).json({
@@ -101,6 +101,7 @@ exports.signInAdmin = function (req, res, next) {
 
         var _signuser_hashed_password = req.body.uPass
         var keepme = req.body.keepme
+        var userBrowser = req.body.userBrowser
         console.log(keepme);
 
 
@@ -131,7 +132,7 @@ exports.signInAdmin = function (req, res, next) {
                 var today = new Date()
                 // store sign in token in userr data 
 
-                var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createdAt: today, keepme: keepme });
+                var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createdAt: today, keepme: keepme, browser: userBrowser });
                 newSign_in_user.save(function (err) {
                     if (err) {
                         return next(err);
@@ -149,7 +150,7 @@ exports.signInAdmin = function (req, res, next) {
                         "createdat": user[0].created_at,
                         "token": token,
                         "keepme": keepme,
-                        "type" : user[0].type
+                        "type": user[0].type
                     }
 
                 })
@@ -169,7 +170,7 @@ exports.signInAdmin = function (req, res, next) {
                 var today = new Date()
                 // store sign in token in userr data 
                 // today   = moment(today).format('LLLL') 
-                var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createdAt: today, keepme: keepme });
+                var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createdAt: today, keepme: keepme, browser: userBrowser });
                 newSign_in_user.save(function (err) {
                     if (err) {
                         return next(err);
@@ -186,7 +187,7 @@ exports.signInAdmin = function (req, res, next) {
                         "createdat": user[0].created_at,
                         "token": token,
                         "keepme": keepme,
-                        "type" : user[0].type
+                        "type": user[0].type
                         // "lastloginDetails" : lastloginDetails
                     }
                 })
@@ -250,6 +251,195 @@ exports.getSalt = function (req, res, next) {
 
     })
 
+
+
+}
+
+//======================================================================================================
+//===================================  Get All Managers  ==============================================
+//====================================================================================================== 
+
+exports.getAllManagers = function (req, res, next) {
+    Manager.find(null, { "_id": true, "fname": true, "lname": true, "email": true, "adminId": true, "created_at": true }).exec().then(user => {
+        if (user.length < 1) {
+            return res.status(402).json({
+                message: ' No manager data availble in this email'
+            });
+        } else {
+            return res.status(200).json({
+                managers: user
+            });
+        }
+
+
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
+
+
+
+}
+
+//======================================================================================================
+//===================================  Get All Users     ==============================================
+//====================================================================================================== 
+
+exports.getAllUsers = function (req, res, next) {
+    User.find(null, { "_id": true, "fname": true, "lname": true, "email": true, "profilepic": true, "created_at": true }).exec().then(user => {
+        if (user.length < 1) {
+            return res.status(402).json({
+                message: ' No User data availble in this email'
+            });
+        } else {
+            return res.status(200).json({
+                users: user
+            });
+        }
+
+
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
+
+
+
+}
+
+
+exports.getUsersBrowserDetails = function (req, res, next) {
+    SignInToken.find(null, { "_id": false, "browser": true }).exec().then(logins => {
+        if (logins.length < 1) {
+            return res.status(402).json({
+                message: ' No login data found'
+            });
+        } else {
+            return res.status(200).json({
+                browsers: logins
+            });
+        }
+
+
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
+
+}
+exports.getUsersLoginTimeDetails = function (req, res, next) {
+    SignInToken.find(null, { "_id": false, "createdAt": true }).exec().then(logins => {
+        if (logins.length < 1) {
+            return res.status(402).json({
+                message: ' No login data found'
+            });
+        } else {
+            return res.status(200).json({
+                lastlogins: logins
+            });
+        }
+
+
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
+
+}
+
+exports.userStat = async function (req, res, next) {
+    // get user login browser
+    var Chrome = await SignInToken.countDocuments({ "browser": "Chrome" })
+    var IExplorer = await SignInToken.countDocuments({ "browser": "IExplorer" })
+    var Safari = await SignInToken.countDocuments({ "browser": "Safari" })
+    var Opera = await SignInToken.countDocuments({ "browser": "Opera" })
+    var Firefox = await SignInToken.countDocuments({ "browser": "Firefox" })
+
+    // // get new user in current year
+    var userCountsInYearly = []
+    for (i = 0; i <= 3; i++) {
+        var ss;
+        var currentYear = new Date().getFullYear() - i
+        ss = await User.countDocuments({ 'created_at': { '$regex': currentYear } })
+        userCountsInYearly[i] = {
+            year: currentYear,
+            usersCount: ss
+        }
+    }
+
+
+
+    var senDetails = {
+        "browser": {
+            "Chrome": Chrome,
+            "IExplorer": IExplorer,
+            "Safari": Safari,
+            "Opera": Opera,
+            "Firefox": Firefox
+        },
+        userInYear: userCountsInYearly
+    }
+
+
+
+    
+    console.log("User Browser Details -------------------------");
+
+
+    console.log(senDetails);
+
+    console.log("User Browser Details -------------------------");
+    return res.status(200).json({
+        senDetails
+    });
+
+
+}
+
+
+exports.getUserRegistrationMonths = async function (req, res, next) {
+    var userCountsInYearly = [null];
+    var usercountinmo;
+    var currentYear = new Date().getFullYear()
+    for (i = 1; i <= 12; i++) {
+            if(i < 10 ){
+                var searchDate = currentYear+"-0"+i;
+                console.log(searchDate)
+                   usercountinmo = await SignInToken.countDocuments({ 'createdAt': {
+                           $gte: searchDate+'-01 00:00:00',
+                           $lt:  searchDate+'-31 23:59:59'
+                       } })
+            }else{
+                console.log(searchDate)
+                var searchDate = currentYear+"-"+i;
+                usercountinmo = await SignInToken.countDocuments({ 'createdAt': {
+                        $gte: searchDate+'-01 00:00:00',
+                        $lt:  searchDate+'-31 23:59:59'
+                    } })
+            }
+        userCountsInYearly[i-1] = {
+            year: currentYear,
+            month: i,
+            usersCount: usercountinmo
+        }
+
+    }
+    console.log(userCountsInYearly)
+    return res.status(200).json({
+            monthBasedUser : userCountsInYearly
+    });
 
 
 }

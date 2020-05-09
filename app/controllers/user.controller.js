@@ -92,7 +92,8 @@ exports.signIn = function (req, res, next) {
 
         var _signuser_hashed_password = req.body.uPass
         var keepme = req.body.keepme
-        console.log(keepme);
+        var userBrowser = req.body.userBrowser
+        console.log(userBrowser);
 
 
         var _user_hashed_password = user[0].password
@@ -122,7 +123,7 @@ exports.signIn = function (req, res, next) {
                 var today = new Date()
                 // store sign in token in userr data 
 
-                var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createdAt: today, keepme: keepme });
+                var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createdAt: today, keepme: keepme , browser : userBrowser});
                 newSign_in_user.save(function (err) {
                     if (err) {
                         return next(err);
@@ -141,7 +142,8 @@ exports.signIn = function (req, res, next) {
                         "token": token,
                         "profilepic": user[0].profilepic,
                         "keepme": keepme,
-                        "type" : user[0].type
+                        "type" : user[0].type,
+
                     }
 
                 })
@@ -161,7 +163,7 @@ exports.signIn = function (req, res, next) {
                 var today = new Date()
                 // store sign in token in userr data 
                 // today   = moment(today).format('LLLL') 
-                var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createdAt: today, keepme: keepme });
+                var newSign_in_user = new SignInToken({ email: req.body.uEmail, token: token, createdAt: today, keepme: keepme, browser:userBrowser });
                 newSign_in_user.save(function (err) {
                     if (err) {
                         return next(err);
@@ -179,7 +181,7 @@ exports.signIn = function (req, res, next) {
                         "token": token,
                         "profilepic": user[0].profilepic,
                         "keepme": keepme,
-                        "type" : user[0].type
+                        "type" : user[0].type,
 
                         // "lastloginDetails" : lastloginDetails
                     }
@@ -547,19 +549,51 @@ exports.changeUsername = function (req, res) {
 
 exports.getLastLogin = function (req, res, next) {
     var email = req.body.uEmail
+    console.log(email);
+    
     if (email != null || email != undefined) {
         SignInToken.find({ email: email }, function (err, docs) {
             try {
                 return res.status(200).json({
                     lastlogin: moment(docs[0].createdAt).format('MMMM Do YYYY, h:mm:ss a'),
                     token: docs[0].token,
-                    keepme: docs[0].keepme
+                    keepme: docs[0].keepme,
+                    // userBrowser : doc[0].userBrowser
                 })
-                next();
+                
 
             } catch (error) {
-                return res.status(401).json({
-                    message: 'No data found'
+                return res.status(411).json({
+                    message: 'No data found',
+                    err:error
+                });
+            }
+        }).sort([["email", 1], ["createdAt", "desc"]])
+    } else {
+        return res.status(201).json({
+            lastlogin: 'Please provide email'
+        })
+    }
+}
+exports.getLastLoginForUser = function (req, res, next) {
+    var email = req.body.uEmail
+    console.log(email);
+    
+    if (email != null || email != undefined) {
+        SignInToken.find({ email: email }, function (err, docs) {
+            try {
+                return res.status(200).json({
+
+                    lastlogin: moment(docs[0].createdAt).format('MMMM Do YYYY, h:mm:ss a'),
+                    browser: docs[0].browser,
+                    keepme: docs[0].keepme,                    
+                })
+                
+
+            } catch (error) {
+                return res.status(411).json({
+                    message: 'No data found',
+                    err:error
                 });
             }
         }).sort([["email", 1], ["createdAt", "desc"]])

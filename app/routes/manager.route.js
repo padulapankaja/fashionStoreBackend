@@ -15,10 +15,15 @@ const managerontroller = require('../controllers/manager.controller');
 //====================================================================================================== 
 
 // create manager
-router.post('/ad/s/m',  managerontroller.registerManager);
+router.post('/ad/s/m',  checkAuth, checkRole(["admin"]), managerontroller.registerManager);
 
+// login manager
+
+router.post('/sign', managerontroller.managerSignIn);
+router.post('/g/salt', managerontroller.getSaltManager);
 // get all registerd users
-router.post('/get/users', checkRole(["manager"]), checkAuth, managerontroller.test);
+router.post('/get/users', checkRole(["manager", "admin"]), checkAuth, managerontroller.test);
+
 
 //export router
 module.exports = router

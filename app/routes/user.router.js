@@ -73,6 +73,8 @@ router.post('/u/pp/up', upload.single('photos'), userController.uploadImage)
 
 // get lst login 
 router.post('/get/l/login', checkAuth, userController.getLastLogin)
+// get lst login 
+router.post('/get/l/login/user', checkAuth, userController.getLastLoginForUser)
 
 
 //export router
