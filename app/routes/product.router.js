@@ -37,5 +37,11 @@ router.post('/insert' , upload.array('photos' , 12 ) ,  product.insert );
 //get all products
 router.get('/getall' , product.getAll );
 
+//get products by category name
+router.get('/get/:categoryname' , product.getByCategoryName );
+
+//get products by id
+router.get('/getsingle/:id' , product.getProductById );
+
 
 module.exports = router;

@@ -56,3 +56,38 @@ exports.getAll = (req, res ,next ) => {
         res.json(data);
     });
 }
+
+exports.getByCategoryName = (req, res ,next ) => {
+    let query = { category_name :  req.params.categoryname }
+   
+    Product.find( query , (err, result) => {
+        if(err){ return next(err) }
+
+        data = {
+            status : 'success',
+            code : 200,
+            data : result
+        }
+    
+        res.json(data);
+    });
+}
+
+exports.getProductById = (req, res ,next ) => {
+    Product.findOne({_id: req.params.id}, (err, result) => {
+        if(err){ 
+            data = {
+                status : 'failed',
+                code : 404,
+                data : null
+            } 
+         }else{
+            data = {
+                status : 'success',
+                code : 200,
+                data : result
+            }    
+         }   
+        res.json(data);
+    });
+}
