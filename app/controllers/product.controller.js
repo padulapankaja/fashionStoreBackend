@@ -91,3 +91,28 @@ exports.getProductById = (req, res ,next ) => {
         res.json(data);
     });
 }
+
+exports.delete = (req,res,next) => {
+    const id = req.params.id
+    Product.findOne({ _id : id } , (err, found_product ) => {
+        if(err){ return next(err) }
+
+        //if object not found
+        if(!found_product){
+            res.status(404).send();
+        }else{
+            found_product.remove( (err, result) => {
+                if(err){ return next(err) }
+
+                data = {
+                    status : 'success',
+                    code : 200,
+                    data : result,
+                    message : 'Successfully Removed'
+                }
+                res.json(data);
+
+            })
+        }
+    }) 
+}

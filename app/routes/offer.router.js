@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const product = require('../controllers/product.controller');
+const offer = require('../controllers/offer.controller');
 
 
 const storage = multer.diskStorage({
     destination: function (req, res, cb) {
-        cb(null, './uploads/products/')
+        cb(null, './uploads/offers/')
     },
     filename: function (req, file, cb) {
         cb(null, new Date().getTime().toString() + "_" + file.originalname);
@@ -31,20 +31,14 @@ const upload = multer({
 
 //--------------------------------------------------------------------
 
-//insert new product
-router.post('/insert' , upload.array('photos' , 12 ) ,  product.insert );
+//insert new offer
+router.post('/insert' , upload.single('photos') ,  offer.insert );
 
-//get all products
-router.get('/getall' , product.getAll );
+//get all categories
+router.get('/getall' , offer.getAll );
 
-//get products by category name
-router.get('/get/:categoryname' , product.getByCategoryName );
 
-//get products by id
-router.get('/getsingle/:id' , product.getProductById );
-
-//delete product by id
-router.delete('/delete/:id' , product.delete );
-
+//delete category by id
+router.delete('/delete/:id' , offer.delete );
 
 module.exports = router;

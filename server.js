@@ -25,6 +25,8 @@ const adminRoutes = require('./app/routes/admin.route');
 const managerRoutes = require('./app/routes/manager.route');
 
 const productRoutes = require('./app/routes/product.router');
+
+const offferRoutes = require('./app/routes/offer.router');
 //======================================================================================================
 //===================================import config files ===============================================
 //======================================================================================================
@@ -55,6 +57,8 @@ app.use('/admin', adminRoutes);
 app.use('/manager', managerRoutes);
 
 app.use('/product', productRoutes );
+
+app.use('/offer', offferRoutes );
 //======================================================================================================
 //================================== Handlle Error     ===========================================
 //======================================================================================================

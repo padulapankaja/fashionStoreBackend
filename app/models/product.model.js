@@ -51,6 +51,9 @@ let Product = new Schema({
         type : Boolean,
         default : true
     },
+    discount : {
+        type : Number
+    },
     created_at:{
         type: Date
     },
