@@ -15,7 +15,6 @@ const MongoClient = require('mongodb').MongoClient;
 //===================================import routes    =================================================
 //======================================================================================================
 
-//import user controlers
 const userRoutes = require('./app/routes/user.router');
 
 const categoryRoutes = require('./app/routes/category.router');
@@ -27,6 +26,9 @@ const managerRoutes = require('./app/routes/manager.route');
 const productRoutes = require('./app/routes/product.router');
 
 const offferRoutes = require('./app/routes/offer.router');
+
+const ordersRoutes = require('./app/routes/orders.route');
+
 //======================================================================================================
 //===================================import config files ===============================================
 //======================================================================================================
@@ -59,6 +61,8 @@ app.use('/manager', managerRoutes);
 app.use('/product', productRoutes );
 
 app.use('/offer', offferRoutes );
+
+app.use('/order' , ordersRoutes );
 //======================================================================================================
 //================================== Handlle Error     ===========================================
 //======================================================================================================

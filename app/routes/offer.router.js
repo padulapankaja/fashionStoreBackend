@@ -34,11 +34,12 @@ const upload = multer({
 //insert new offer
 router.post('/insert' , upload.single('photos') ,  offer.insert );
 
-//get all categories
+//get all offers
 router.get('/getall' , offer.getAll );
 
 
-//delete category by id
+
+//delete offers by id
 router.delete('/delete/:id' , offer.delete );
 
 module.exports = router;
