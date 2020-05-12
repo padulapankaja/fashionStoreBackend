@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const offer = require('../controllers/offer.controller');
+const checkAuth = require('../middleware/checkauth.middleware')
 
 
 const storage = multer.diskStorage({

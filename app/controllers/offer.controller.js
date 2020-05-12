@@ -2,16 +2,20 @@ const Offer = require('../models/offer.model');
 
 exports.insert = (req, res ,next ) => {
     
+
     let new_offer = Offer({
         title: req.body.title,
         subtitle: req.body.subtitle,
-        discount : req.body.subtitle,
-        banner_image: req.file.path,
         discount : req.body.discount,
+        banner_image: req.file.path,
+        size : req.body.size,
         product_list : JSON.parse(req.body.product_list),
         created_at: new Date() ,
         updated_at: new Date()
     });
+
+    console.log(new_offer);
+    
 
     new_offer.save( (err ,result ) => {
         if (err) { return next(err)}
