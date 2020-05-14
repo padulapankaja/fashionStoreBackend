@@ -15,6 +15,8 @@ const MongoClient = require('mongodb').MongoClient;
 //===================================import routes    =================================================
 //======================================================================================================
 
+const cartRoutes = require('./app/routes/shoppingcart.route');
+
 const userRoutes = require('./app/routes/user.router');
 
 const categoryRoutes = require('./app/routes/category.router');
@@ -50,6 +52,8 @@ mongoose.set('useCreateIndex', true);
 //======================================================================================================
 
 //user routes 
+app.use('/cart', cartRoutes);
+
 app.use('/user', userRoutes);
 
 app.use('/category', categoryRoutes);
