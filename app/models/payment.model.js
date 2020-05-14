@@ -5,7 +5,7 @@ let Payment = new Schema({
     date: {
         type: Date
     },
-    amount: {
+    total_amount: {
         type: String,
         required: true,
     },

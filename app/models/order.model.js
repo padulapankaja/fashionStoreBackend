@@ -15,6 +15,18 @@ let Order = new Schema({
     deliveryAddress: {
         type: String,
         required: true,
+    },
+    products: {
+        type: [],
+        required: true
+    },
+    deleteRequest: {
+        type: Boolean,
+        default: false
+    },
+    shipped: {
+        type: Boolean,
+        default: false
     }
 })
 

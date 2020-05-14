@@ -83,3 +83,91 @@ exports.GetOrdersByUserId = (req, res, next) => {
         res.json(data);
     });
 }
+
+exports.GetOrderById = (req, res ,next ) => {
+    
+    Order.findOne({ _id: req.params.id }, (err, result) => {
+        
+        if(err){ 
+            data = {
+                status : 'failed',
+                code : 404,
+                data : null
+            } 
+         }else{
+            data = {
+                status : 'success',
+                code : 200,
+                data : result
+            }    
+         }   
+        res.json(data);
+    });
+}
+
+exports.update = (req, res ,next ) => {
+    const id = req.params.id
+    
+    Order.findOne({ _id : id } , (err, found_item ) => {
+        if(err){ return next(err) }
+
+        //if object not found
+        if(!found_item){
+            res.status(404).send();
+        }else{
+
+            //if address changed
+            if( req.body.deliveryAddress){ 
+                found_item.deliveryAddress = req.body.deliveryAddress 
+            }
+            if (req.body.shipped){
+                found_item.shipped = req.body.shipped
+            }
+
+            found_item.save( (err , updated_object) => {
+                if(err){ return next(err) }
+                
+                data = {
+                    status : 'success',
+                    code : 200,
+                    data : updated_object,
+                    message : 'Successfully Updated'
+                }
+                res.json(data);
+            })
+
+        }
+    });
+}
+
+exports.RequestDelete = (req, res ,next ) => {
+    const id = req.params.id
+    
+    Order.findOne({ _id : id } , (err, found_item ) => {
+        if(err){ return next(err) }
+
+        //if object not found
+        if(!found_item){
+            res.status(404).send();
+        }else{
+
+            //if address changed
+            if( req.body.deleteRequest){ 
+                found_item.deleteRequest = req.body.deleteRequest 
+            }
+
+            found_item.save( (err , updated_object) => {
+                if(err){ return next(err) }
+                
+                data = {
+                    status : 'success',
+                    code : 200,
+                    data : updated_object,
+                    message : 'Successfully Updated'
+                }
+                res.json(data);
+            })
+
+        }
+    });
+}
