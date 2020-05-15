@@ -46,5 +46,8 @@ router.get('/getsingle/:id' , product.getProductById );
 //delete product by id
 router.delete('/delete/:id' , product.delete );
 
+//update product by id
+router.patch('/update/:id' , upload.array('photos' , 12 ) , product.update );
+
 
 module.exports = router;
