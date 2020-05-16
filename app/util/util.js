@@ -152,6 +152,45 @@ class Util {
 
 
 
+  // sent email for news letters
+  sentEmailforSuscribe(uEmail) {
+    let transport = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+            user: 'cassertmusic@gmail.com',
+            pass: 'guruge123@sliit'
+        }
+    });
+    const handlebarOptions = {
+        viewEngine: {
+            extName: '.hbs',
+            partialsDir: './views/',
+            layoutsDir: './views/',
+            defaultLayout: 'suscribe.hbs',
+        },
+        viewPath: './views/',
+        extName: '.hbs',
+
+    };
+    transport.use('compile', hbs(handlebarOptions));
+    const message = {
+        from: 'cassertmusic@gmail.com',
+        to: uEmail,
+        subject: 'Newsletter in Fashion Store',
+        // html: '<h1>Have the most fun you can in a car!</h1><p>Get your <b>Tesla</b> today!</p>',
+        template: 'suscribe',
+    };
+    transport.sendMail(message, function (err, info) {
+        if (err) {
+            console.log(err)
+
+        } else {
+            console.log(info);
+        }
+    });
+}
 
 
 

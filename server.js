@@ -35,6 +35,8 @@ const commentRoutes = require("./app/routes/comment.route");
 
 const wishlistRoute = require("./app/routes/wishlist.route");
 
+const commonRoute = require("./app/routes/common.route");
+
 //======================================================================================================
 //===================================import config files ===============================================
 //======================================================================================================
@@ -75,6 +77,8 @@ app.use("/order", ordersRoutes);
 app.use("/comment", commentRoutes);
 
 app.use("/wishlist", wishlistRoute);
+
+app.use("/common", commonRoute);
 
 // app.use('/order' , ordersRoutes );
 //======================================================================================================

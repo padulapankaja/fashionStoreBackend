@@ -603,3 +603,4 @@ exports.getLastLoginForUser = function (req, res, next) {
         })
     }
 }
+
