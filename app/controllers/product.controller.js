@@ -182,3 +182,22 @@ exports.delete = (req,res,next) => {
         }
     }) 
 }
+
+exports.getAllLessDetails = (req, res ,next ) => {
+    
+    Product.find({} , {
+        _id : 1 ,
+        name: 1 ,
+        images : { $slice: -1 } ,
+    } , (err, result) => {
+        if(err){ return next(err) }
+
+        data = {
+            status : 'success',
+            code : 200,
+            data : result
+        }
+    
+        res.json(data);
+    });
+}

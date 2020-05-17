@@ -37,6 +37,9 @@ router.post('/insert' , upload.array('photos' , 12 ) ,  product.insert );
 //get all products
 router.get('/getall' , product.getAll );
 
+//get all products with less details
+router.get('/getall/simple' , product.getAllLessDetails );
+
 //get products by category name
 router.get('/get/:categoryname' , product.getByCategoryName );
 
