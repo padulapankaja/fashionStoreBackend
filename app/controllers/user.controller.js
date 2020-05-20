@@ -297,10 +297,12 @@ exports.getAllUsers = function (req, res, next) {
 //===================================   Delete Account      ==============================================
 //====================================================================================================== 
 exports.deleteUser = function (req, res) {
+    console.log("Delete -----------------------------------------------------------------------");
+    
     console.log(req.body);
     let deleteUser = {
-        "uEmail": req.body.email,
-        "uPass": req.body.password,
+        "uEmail": req.body.uEmail,
+        "uPass": req.body.uPass,
     };
     console.log(deleteUser);
     User.find({ email: deleteUser.uEmail }).exec().then(user => {
