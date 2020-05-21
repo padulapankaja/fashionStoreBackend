@@ -2,7 +2,7 @@ const Comment = require("../models/comment.model");
 
 exports.Insert = (req, res, next) => {
   let newComment = Comment({
-    userId: req.body.userId,
+    userid: req.body.userid,
     username: req.body.username,
     produtid: req.body.produtid,
     comment: req.body.comment,

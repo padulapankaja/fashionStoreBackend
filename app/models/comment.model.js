@@ -4,12 +4,11 @@ const Schema = mongoose.Schema;
 let Comment = new Schema({
   userid: {
     type: String,
-    required: true,
   },
-  username: {
-    type: String,
-    required: true,
-  },
+  // username: {
+  //   type: String,
+  //   required: true,
+  // },
   produtid: {
     type: String,
   },
