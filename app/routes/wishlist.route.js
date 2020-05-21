@@ -11,4 +11,7 @@ router.get("/get/:userid", wishlist.GetAll);
 //delete product by id
 router.delete("/delete/:id", wishlist.Delete);
 
+//clear user wishlist
+router.delete("/clear/:userid", wishlist.clear);
+
 module.exports = router;

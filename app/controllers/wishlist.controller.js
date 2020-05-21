@@ -93,3 +93,20 @@ exports.Delete = (req, res, next) => {
     }
   });
 };
+
+exports.clear = (req, res, next) => {
+  const userid = req.params.userid;
+  Cart.deleteMany({ users: userid }, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+
+    data = {
+      status: "success",
+      code: 200,
+      data: result,
+    };
+
+    res.json(data);
+  });
+};
