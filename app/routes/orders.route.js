@@ -9,7 +9,7 @@ router.post('/Insert', Order.Insert);
 router.get('/GetAll' , Order.GetAll);
 
 //get orders by user Id
-router.get('/get/:userId', Order.GetOrdersByUserId);
+router.get('/get/:id', Order.GetOrdersByUserId);
 
 //delete order by id
 router.delete('/delete/:id' , Order.Delete);

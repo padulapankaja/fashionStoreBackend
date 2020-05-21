@@ -12,6 +12,10 @@ let Order = new Schema({
   userId: {
     type: String,
   },
+  userName: {
+    type: String,
+    required: true,
+  },
   deliveryAddress: {
     type: String,
     required: true,

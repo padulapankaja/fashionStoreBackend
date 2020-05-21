@@ -6,6 +6,7 @@ exports.Insert = (req, res, next) => {
         date: new Date(),
         amount: req.body.amount,
         userId: req.body.userId,
+        userName: req.body.userName,
         deliveryAddress: req.body.deliveryAddress,
         products: req.body.products,
     });
@@ -70,7 +71,7 @@ exports.Delete = (req, res, next) => {
 
 exports.GetOrdersByUserId = (req, res, next) => {
 
-    let query = { userId :  req.params.userId }
+    let query = { userId :  req.params.id }
 
     Order.find( query , (err, result) => {
         if(err){ return next(err) }
@@ -123,6 +124,9 @@ exports.update = (req, res ,next ) => {
             }
             if (req.body.shipped){
                 found_item.shipped = req.body.shipped
+            }
+            if (req.body.deleteRequest){
+                found_item.deleteRequest = req.body.deleteRequest
             }
 
             found_item.save( (err , updated_object) => {
