@@ -23,7 +23,7 @@ let Offer = new Schema({
     },
     size : {
         type:Number,
-        required : true,
+        default : 12 
     },
     created_at:{
         type: Date
