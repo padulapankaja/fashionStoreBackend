@@ -6,7 +6,9 @@ exports.Insert = (req, res, next) => {
         date: new Date(),
         amount: req.body.amount,
         userId: req.body.userId,
-        deliveryAddress: req.body.deliveryAddress
+        userName: req.body.userName,
+        deliveryAddress: req.body.deliveryAddress,
+        products: req.body.products,
     });
 
     console.log("New Order: ", newOrder);
@@ -69,7 +71,7 @@ exports.Delete = (req, res, next) => {
 
 exports.GetOrdersByUserId = (req, res, next) => {
 
-    let query = { userId :  req.params.userId }
+    let query = { userId :  req.params.id }
 
     Order.find( query , (err, result) => {
         if(err){ return next(err) }
@@ -85,7 +87,7 @@ exports.GetOrdersByUserId = (req, res, next) => {
 }
 
 exports.GetOrderById = (req, res ,next ) => {
-    
+    console.log(req.params.id);
     Order.findOne({ _id: req.params.id }, (err, result) => {
         
         if(err){ 
@@ -100,7 +102,7 @@ exports.GetOrderById = (req, res ,next ) => {
                 code : 200,
                 data : result
             }    
-         }   
+         } 
         res.json(data);
     });
 }
@@ -122,6 +124,9 @@ exports.update = (req, res ,next ) => {
             }
             if (req.body.shipped){
                 found_item.shipped = req.body.shipped
+            }
+            if (req.body.deleteRequest){
+                found_item.deleteRequest = req.body.deleteRequest
             }
 
             found_item.save( (err , updated_object) => {

@@ -1,4 +1,4 @@
-// check auth middle ware
+// check auth middle ware  in header
 
 // import jason web token
 const jwt = require('jsonwebtoken')
@@ -17,7 +17,8 @@ const SignInToken = require('../models/signtokens.model');
 //====================================================================================================== 
 module.exports =  (req, res, next) => {
     try {
-        const decorded = jwt.verify(req.body.token, attributes.env.JWT_KEY);
+        const token = req.header.authorization.split(" ")[1];
+        const decorded = jwt.verify(token, attributes.env.JWT_KEY);
         req.userData = decorded
         console.log("Decord Data");
         console.log(req.userData);
