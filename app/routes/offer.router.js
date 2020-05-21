@@ -38,7 +38,7 @@ router.post('/insert' , upload.single('photos') ,  offer.insert );
 //get all offers
 router.get('/getall' , offer.getAll );
 
-
+router.get('/get/:id' , offer.getDetails )
 
 //delete offers by id
 router.delete('/delete/:id' , offer.delete );
