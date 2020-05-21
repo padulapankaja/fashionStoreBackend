@@ -6,7 +6,7 @@ const wishlist = require("../controllers/wishlist.controller");
 router.post("/insert", wishlist.Insert);
 
 //get all products
-router.get("/getall", wishlist.GetAll);
+router.get("/get/:userid", wishlist.GetAll);
 
 //delete product by id
 router.delete("/delete/:id", wishlist.Delete);

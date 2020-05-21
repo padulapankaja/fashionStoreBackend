@@ -1,4 +1,6 @@
+const mongoose = require("mongoose");
 const wishlist = require("../models/wishlist.model");
+const ObjectId = mongoose.Types.ObjectId;
 
 exports.Insert = (req, res, next) => {
   let newWishlistItem = wishlist({
@@ -31,7 +33,7 @@ exports.GetAll = (req, res, next) => {
 
   wishlist
     .aggregate([
-      { $match: { users: ObjectId(userid) } },
+      { $match: { userid: userid } },
       {
         $lookup: {
           from: "products", // collection name in db
@@ -43,7 +45,7 @@ exports.GetAll = (req, res, next) => {
       {
         $project: {
           userid: 1,
-          created_at: 0,
+          created_at: 1,
           product: { $arrayElemAt: ["$product", 0] },
         },
       },
