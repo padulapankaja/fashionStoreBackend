@@ -394,7 +394,7 @@ exports.userStat = async function (req, res, next) {
 
 
 
-    
+
     console.log("User Browser Details -------------------------");
 
 
@@ -414,22 +414,26 @@ exports.getUserRegistrationMonths = async function (req, res, next) {
     var usercountinmo;
     var currentYear = new Date().getFullYear()
     for (i = 1; i <= 12; i++) {
-            if(i < 10 ){
-                var searchDate = currentYear+"-0"+i;
-                console.log(searchDate)
-                   usercountinmo = await SignInToken.countDocuments({ 'createdAt': {
-                           $gte: searchDate+'-01 00:00:00',
-                           $lt:  searchDate+'-31 23:59:59'
-                       } })
-            }else{
-                console.log(searchDate)
-                var searchDate = currentYear+"-"+i;
-                usercountinmo = await SignInToken.countDocuments({ 'createdAt': {
-                        $gte: searchDate+'-01 00:00:00',
-                        $lt:  searchDate+'-31 23:59:59'
-                    } })
-            }
-        userCountsInYearly[i-1] = {
+        if (i < 10) {
+            var searchDate = currentYear + "-0" + i;
+            console.log(searchDate)
+            usercountinmo = await SignInToken.countDocuments({
+                'createdAt': {
+                    $gte: searchDate + '-01 00:00:00',
+                    $lt: searchDate + '-31 23:59:59'
+                }
+            })
+        } else {
+            console.log(searchDate)
+            var searchDate = currentYear + "-" + i;
+            usercountinmo = await SignInToken.countDocuments({
+                'createdAt': {
+                    $gte: searchDate + '-01 00:00:00',
+                    $lt: searchDate + '-31 23:59:59'
+                }
+            })
+        }
+        userCountsInYearly[i - 1] = {
             year: currentYear,
             month: i,
             usersCount: usercountinmo
@@ -438,8 +442,36 @@ exports.getUserRegistrationMonths = async function (req, res, next) {
     }
     console.log(userCountsInYearly)
     return res.status(200).json({
-            monthBasedUser : userCountsInYearly
+        monthBasedUser: userCountsInYearly
     });
 
 
+}
+
+
+
+//======================================================================================================
+//===================================  Delete Managers     ==============================================
+//====================================================================================================== 
+exports.removeManagers = function (req, res, next) {
+    Manager.find({ email: req.body.managerEmail }).exec().then(user => {
+        if (user.length < 1) {
+            return res.status(401).json({
+                message: 'Auth Faild , No Manager data availble in this email'
+            });
+        }
+        UtilObj.sentEmailforDeletedUsers(user[0].email)
+        Manager.findByIdAndRemove(user[0]._id, function (err) {
+            if (err) return next(err);
+            res.status(200).json({
+                message: 'Sucessfully Deleted'
+            })
+        })
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+
+    })
 }
