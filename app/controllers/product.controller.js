@@ -123,6 +123,22 @@ exports.getAll = (req, res ,next ) => {
     });
 }
 
+exports.searchProducts = (req, res ,next ) => {
+    let search = req.params.search;
+    let query = { name : new RegExp(search , 'i') }
+    console.log(query)
+    Product.find(query , (err, result) => {
+        if(err){ return next(err) }
+
+        data = {
+            status : 'success',
+            code : 200,
+            data : result
+        }
+        res.json(data);
+    });
+}
+
 exports.getByCategoryName = (req, res ,next ) => {
     let query = { category_name :  req.params.categoryname }
    
