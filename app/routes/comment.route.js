@@ -6,12 +6,15 @@ const comment = require("../controllers/comment.controller");
 router.post("/insert", comment.Insert);
 
 //get all comments
-router.get("/getall", comment.GetAll);
+router.get("/GetAll", comment.GetAll);
 
-//get Comment by id
-router.get("/getsingle/:id", comment.GetCommentById);
+// //get Comment by id
+// router.get("/getsingle/:id", comment.GetCommentById);
 
 //delete comment by id
 router.delete("/delete/:id", comment.Delete);
+
+//get comments by product id
+router.get("/GetComByProId/:id", comment.GetComByProId);
 
 module.exports = router;
