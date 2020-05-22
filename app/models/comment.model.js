@@ -5,11 +5,14 @@ let Comment = new Schema({
   userid: {
     type: String,
   },
-  // username: {
-  //   type: String,
-  //   required: true,
-  // },
+  username: {
+    type: String,
+  },
+
   produtid: {
+    type: String,
+  },
+  produt_name: {
     type: String,
   },
   comment: {

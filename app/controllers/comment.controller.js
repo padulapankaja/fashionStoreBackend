@@ -5,6 +5,7 @@ exports.Insert = (req, res, next) => {
     userid: req.body.userid,
     username: req.body.username,
     produtid: req.body.produtid,
+    produt_name: req.body.produt_name,
     comment: req.body.comment,
     rating: req.body.rating,
     created_at: new Date(),
@@ -30,6 +31,22 @@ exports.Insert = (req, res, next) => {
 
 exports.GetAll = (req, res, next) => {
   Comment.find({}, (err, result) => {
+    if (err) {
+      return next(err);
+    }
+
+    data = {
+      status: "success",
+      code: 200,
+      data: result,
+    };
+
+    res.json(data);
+  });
+};
+
+exports.GetComByProId = (req, res, next) => {
+  Comment.find({ produtid: req.params.id }, (err, result) => {
     if (err) {
       return next(err);
     }
@@ -73,23 +90,23 @@ exports.Delete = (req, res, next) => {
   });
 };
 
-exports.GetCommetByUserId = (req, res, next) => {
-  let query = { userId: req.params.userId };
+// exports.GetCommetByUserId = (req, res, next) => {
+//   let query = { userId: req.params.userid };
 
-  Comment.find(query, (err, result) => {
-    if (err) {
-      return next(err);
-    }
+//   Comment.find(query, (err, result) => {
+//     if (err) {
+//       return next(err);
+//     }
 
-    data = {
-      status: "success",
-      code: 200,
-      data: result,
-    };
+//     data = {
+//       status: "success",
+//       code: 200,
+//       data: result,
+//     };
 
-    res.json(data);
-  });
-};
+//     res.json(data);
+//   });
+// };
 
 exports.GetCommentById = (req, res, next) => {
   Comment.findOne({ _id: req.params.id }, (err, result) => {
