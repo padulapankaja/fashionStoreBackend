@@ -249,7 +249,4 @@ exports.getSaltManager = function (req, res, next) {
         });
 
     })
-
-
-
 }

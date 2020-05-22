@@ -37,6 +37,9 @@ router.post('/g/all/users/time',   checkRole(["admin"]), checkAuth, adminControl
 // admin get all user statics 
 router.post('/g/user/stat',  adminController.userStat);
 
+// delete manager
+router.post('/del/man',  adminController.removeManagers);
+
 //admin get user registtrion from month
 router.post('/g/user/months',  adminController.getUserRegistrationMonths);
 
