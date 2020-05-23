@@ -6,6 +6,7 @@ const Common = require("../controllers/common.controller");
 router.post("/subs", Common.subscribe);
 router.post("/forget", Common.forgotPassword);
 
+router.get("/counts" , Common.counts )
 
 
 module.exports = router;

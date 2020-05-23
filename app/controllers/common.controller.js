@@ -6,6 +6,10 @@ const UtilObj = require('../util/util')
 const Admin = require('../models/admin.model');
 const Manager = require('../models/manager.model');
 const User = require('../models/user.model');
+const Products = require('../models/product.model');
+const Categories = require('../models/category.model');
+const Orders = require('../models/order.model');
+const Offers = require('../models/offer.model');
 
 //======================================================================================================
 //===================================  ADD SUBSCRIBE      ==============================================
@@ -56,6 +60,35 @@ exports.forgotPassword = function (req, res, next) {
 
     
     return res.send(type)
+
+
+}
+
+exports.counts = async function (req, res, next) {
+    
+    const User_count = await User.count({});
+    const Manager_count = await Manager.count({});
+    const Products_count = await Products.count({});
+    const Categories_count = await Categories.count({});
+    const Orders_count = await Orders.count({});
+    const Offers_count = await Offers.count({});
+   
+    let result = [];
+    result.push({ name : "Users" , value : User_count });
+    result.push({ name : "Managers" , value : Manager_count });
+    result.push({ name : "Products" , value : Products_count });
+    result.push({ name : "Categories" , value : Categories_count });
+    result.push({ name : "Orders" , value : Orders_count });
+    result.push({ name : "Offers" , value : Offers_count });
+   
+    data = {
+        status : 'success',
+        code : 200,
+        data : result
+    }
+
+    res.json(data);
+   
 
 
 }
