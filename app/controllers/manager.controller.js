@@ -166,7 +166,7 @@ exports.managerSignIn = function (req, res, next) {
                     },
                     attributes.env.JWT_KEY,
                     {
-                        expiresIn: "1h"
+                        expiresIn: "240h"
                     }
                 );
                 var today = new Date()
