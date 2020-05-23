@@ -25,15 +25,22 @@ module.exports =  (req, res, next) => {
         if (email != null || email != undefined) {
             SignInToken.find({ email: email }, function (err, docs) {
                 try {
-                    var dbtoken = docs[0].token
-                    var isAvailable = dbtoken.localeCompare(req.body.token, { sensitivity: 'base' })
-                    if (isAvailable == 0) {
+
+                    if(docs.length > 0){
+
                         next();
-                    } else {
-                        return res.status(403).json({
-                            message: 'Tokens not match'
-                        });
                     }
+                    // var dbtoken = docs[0].token
+                    // var isAvailable = dbtoken.localeCompare(req.body.token, { sensitivity: 'base' })
+                    // if (isAvailable == 0) {
+                        // next();
+                    // } else {
+                    //     console.log("Tokens not match");
+                        
+                    //     return res.status(403).json({
+                    //         message: 'Tokens not match'
+                    //     });
+                    // }
                 } catch (error) {
                     return res.status(402).json({
                         message: 'No token found'

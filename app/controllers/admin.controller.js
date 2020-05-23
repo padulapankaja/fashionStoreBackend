@@ -164,7 +164,7 @@ exports.signInAdmin = function (req, res, next) {
                 },
                     attributes.env.JWT_KEY,
                     {
-                        expiresIn: "1h"
+                        expiresIn: "240h"
                     }
                 );
                 var today = new Date()
@@ -474,4 +474,138 @@ exports.removeManagers = function (req, res, next) {
         });
 
     })
+}
+
+
+
+//======================================================================================================
+//=================================== check registation     ==============================================
+//====================================================================================================== 
+
+exports.getuserbyMonth = function(req, res, next) {
+   
+    var currentMonth = new Date(moment( new Date() ).format("YYYY-MM-DD") ); 
+    var prev =  new Date()
+
+    prev.setMonth(prev.getMonth() - 6)
+    currentMonth.setMonth(currentMonth.getMonth() + 1)
+    
+    console.log(currentMonth);
+    console.log(prev);
+    
+    let data_labels = []
+    let data_values = []
+    
+    SignInToken.aggregate([
+        {
+            $project: {
+                //   xx : { $toString : "$token" },
+                create : { $dateToString: { format: "%Y-%m", date: "$createdAt" } }
+            }
+        },
+        {
+            $group : { _id : "$create"  , total: { $sum: 1 }  }
+        }
+    ]).exec(function(err, result) {
+        if (err) { return next(err)}
+        
+
+        for(var arr=[],dt= prev ; dt<= currentMonth; dt.setMonth(dt.getMonth()+1)){ 
+            
+            let c = new Date(dt);
+            let total = 0;
+            let find = result.findIndex( item => item._id == moment(new Date(c)).format("YYYY-MM") )
+            if(find >= 0 ){
+                total = result[find].total;
+            }
+
+            data_labels.push(moment(new Date(c)).format("YYYY-MM") );
+            data_values.push(total);
+          }
+        
+          data = {
+            status : 'success',
+            code : 200,
+            data : { data_labels : data_labels , data_values : data_values },
+        }
+        res.json(data)
+    });
+}
+
+
+
+//======================================================================================================
+//=================================== check bowser     ==============================================
+//====================================================================================================== 
+
+exports.newBrowserDetails = function(req, res, next){
+    let data_browser = []
+    let data_brow_value = []
+    SignInToken.aggregate([
+        {
+            $project: {
+                //   xx : { $toString : "$token" },
+                // create : { $dateToString: { format: "%Y-%m", date: "$createdAt" } }
+                brow :{ $toString : "$browser"}
+            }
+        },
+        {
+            $group : { _id : "$brow"  , total: { $sum: 1 }  }
+        }
+    ]).exec(function(err, result) {
+        if (err) { return next(err)}
+        
+
+        for(var i = 0 ; i< result.length; i++){ 
+            if(result[i]._id != null || result[i]._id != undefined ){
+
+                data_browser.push(result[i]._id);
+                data_brow_value.push(result[i].total);
+            }
+          }
+        
+          data = {
+            status : 'success',
+            code : 200,
+            data : { data_browsers : data_browser , data_brow_values : data_brow_value },
+        }
+        res.json(data)
+    }); 
+}
+
+
+exports.getUserByYear = function(req, res, next){
+
+    let data_year = []
+    let data_count = []
+    User.aggregate([
+        {
+            $project: {
+                //   xx : { $toString : "$token" },
+                create : { $dateToString: { format: "%Y-%m", date: "$created_at" } }
+            }
+        },
+        {
+            $group : { _id : "$create"  , total: { $sum: 1 }  }
+        }
+    ]).exec(function(err, result) {
+        if (err) { return next(err)}
+        
+
+        for(var i = 0 ; i< result.length; i++){ 
+            if(result[i]._id != null || result[i]._id != undefined ){
+
+                data_browser.push(result[i]._id);
+                data_brow_value.push(result[i].total);
+            }
+          }
+        
+          data = {
+            status : 'success',
+            code : 200,
+            data : { data_browsers : data_browser , data_brow_values : data_brow_value },
+        }
+        res.json(data)
+    }); 
+
 }

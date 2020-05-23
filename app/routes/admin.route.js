@@ -44,6 +44,8 @@ router.post('/del/man',  adminController.removeManagers);
 router.post('/g/user/months',  adminController.getUserRegistrationMonths);
 
 
+router.post('/g/test' , adminController.getuserbyMonth)
+router.post('/g/u/test' , adminController.newBrowserDetails)
 //export router
 module.exports = router
 
