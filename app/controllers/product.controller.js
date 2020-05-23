@@ -21,6 +21,7 @@ exports.insert = (req, res ,next ) => {
         images: images,
         added_by : req.body.added_by,
         is_active : true, 
+        discount : (req.body.discount) ? req.body.discount : 0 ,
         view_count : 0 ,
         created_at: new Date() ,
         updated_at: new Date()
@@ -63,6 +64,9 @@ exports.update = (req, res ,next ) => {
 
             //if brand changed
             if( req.body.brand){ found_product.brand = req.body.brand }
+
+            //if discount changed
+            if( req.body.discount){ found_product.discount = req.body.discount }
 
             //if cateogry changed
             if( req.body.category){ 
