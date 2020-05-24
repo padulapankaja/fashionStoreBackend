@@ -96,7 +96,7 @@ exports.Delete = (req, res, next) => {
 
 exports.clear = (req, res, next) => {
   const userid = req.params.userid;
-  Cart.deleteMany({ users: userid }, (err, result) => {
+  wishlist.deleteMany({ userid : userid }, (err, result) => {
     if (err) {
       return next(err);
     }
