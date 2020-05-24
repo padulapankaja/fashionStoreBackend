@@ -3,6 +3,9 @@ const router = express.Router();
 const multer = require('multer');
 const product = require('../controllers/product.controller');
 
+const checkAuth = require('../middleware/checkauth.middleware')
+const { checkRole } = require('../middleware/roleauth.middleware')
+
 
 const storage = multer.diskStorage({
     destination: function (req, res, cb) {
@@ -32,7 +35,7 @@ const upload = multer({
 //--------------------------------------------------------------------
 
 //insert new product
-router.post('/insert' , upload.array('photos' , 12 ) ,  product.insert );
+router.post('/insert' , upload.array('photos' , 12 ) , checkAuth, checkRole(["manager", "admin"]), product.insert );
 
 //get all products
 router.get('/getall' , product.getAll );
@@ -50,10 +53,10 @@ router.get('/get/:categoryname' , product.getByCategoryName );
 router.get('/getsingle/:id' , product.getProductById );
 
 //delete product by id
-router.delete('/delete/:id' , product.delete );
+router.delete('/delete/:id' ,  checkAuth, checkRole(["manager", "admin"]),product.delete );
 
 //update product by id
-router.patch('/update/:id' , upload.array('photos' , 12 ) , product.update );
+router.patch('/update/:id' , upload.array('photos' , 12 ) ,checkAuth, checkRole(["manager", "admin"]), product.update );
 
 
 module.exports = router;

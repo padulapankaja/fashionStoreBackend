@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const cateogry = require('../controllers/category.controller');
-
+const checkAuth = require('../middleware/checkauth.middleware')
+const { checkRole } = require('../middleware/roleauth.middleware')
 
 const storage = multer.diskStorage({
     destination: function (req, res, cb) {
@@ -32,15 +33,15 @@ const upload = multer({
 //--------------------------------------------------------------------
 
 //insert new category
-router.post('/insert' , upload.single('photos') ,  cateogry.insert );
+router.post('/insert' , upload.single('photos') ,checkAuth, checkRole(["manager", "admin"]),  cateogry.insert );
 
 //get all categories
 router.get('/getall' , cateogry.getAll );
 
 //update categary by id
-router.patch('/update/:id' , upload.single('photos') , cateogry.update );
+router.patch('/update/:id' , upload.single('photos') ,checkAuth, checkRole(["manager", "admin"]), cateogry.update );
 
 //delete category by id
-router.delete('/delete/:id' , cateogry.delete );
+router.delete('/delete/:id' ,checkAuth, checkRole(["manager", "admin"]), cateogry.delete );
 
 module.exports = router;

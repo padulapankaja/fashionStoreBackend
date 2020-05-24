@@ -83,6 +83,8 @@ exports.update = (req, res ,next ) => {
 }
 
 exports.delete = (req,res,next) => {
+    console.log(req.body);
+    
     const id = req.params.id
     Category.findOne({ _id : id } , (err, found_category ) => {
         if(err){ return next(err) }

@@ -22,7 +22,7 @@ router.post('/ad/s/m',  checkAuth, checkRole(["admin"]), managerontroller.regist
 router.post('/sign', managerontroller.managerSignIn);
 router.post('/g/salt', managerontroller.getSaltManager);
 // get all registerd users
-router.post('/get/users', checkRole(["manager", "admin"]), checkAuth, managerontroller.test);
+router.post('/get/users', checkAuth, checkRole(["manager", "admin"]), managerontroller.test);
 
 
 //export router

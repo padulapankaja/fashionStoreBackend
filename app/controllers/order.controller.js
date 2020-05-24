@@ -2,6 +2,8 @@ const Order = require('../models/order.model');
 
 exports.Insert = (req, res, next) => {
 
+    console.log(req.body);
+    
     let newOrder = Order ({
         date: new Date(),
         amount: req.body.amount,

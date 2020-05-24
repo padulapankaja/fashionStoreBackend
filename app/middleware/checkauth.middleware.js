@@ -16,6 +16,8 @@ const SignInToken = require('../models/signtokens.model');
 //===================================  User autanticazion         ==============================================
 //====================================================================================================== 
 module.exports =  (req, res, next) => {
+    console.log(req.body);
+    
     try {
         const decorded = jwt.verify(req.body.token, attributes.env.JWT_KEY);
         req.userData = decorded

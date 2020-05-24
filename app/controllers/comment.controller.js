@@ -63,6 +63,7 @@ exports.GetComByProId = (req, res, next) => {
 
 exports.Delete = (req, res, next) => {
   const id = req.params.id;
+  
 
   Comment.findOne({ _id: id }, (err, found_comment) => {
     if (err) {

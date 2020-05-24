@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const comment = require("../controllers/comment.controller");
-
+const checkAuth = require('../middleware/checkauth.middleware')
 //insert new comment
-router.post("/insert", comment.Insert);
+router.post("/insert",checkAuth,  comment.Insert);
 
 //get all comments
 router.get("/GetAll", comment.GetAll);
@@ -12,7 +12,7 @@ router.get("/GetAll", comment.GetAll);
 // router.get("/getsingle/:id", comment.GetCommentById);
 
 //delete comment by id
-router.delete("/delete/:id", comment.Delete);
+router.delete("/delete/:id", checkAuth, comment.Delete);
 
 //get comments by product id
 router.get("/GetComByProId/:id", comment.GetComByProId);

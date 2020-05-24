@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Order = require('../controllers/order.controller');
+const checkAuth = require('../middleware/checkauth.middleware')
 
 //Insert order
-router.post('/Insert', Order.Insert);
+router.post('/Insert',checkAuth,  Order.Insert);
 
 //get all orders
 router.get('/GetAll' , Order.GetAll);
@@ -12,7 +13,7 @@ router.get('/GetAll' , Order.GetAll);
 router.get('/get/:id', Order.GetOrdersByUserId);
 
 //delete order by id
-router.delete('/delete/:id' , Order.Delete);
+router.delete('/delete/:id' , checkAuth,  Order.Delete);
 
 //get order by id
 router.get('/getOrder/:id', Order.GetOrderById);
